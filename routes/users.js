@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var Users = require('../public/javascripts/models/Users')
+var UserSchema = require('../public/javascripts/models/UserSchema')
 require('../public/javascripts/services/connection')
 var bcrypt = require('bcrypt')
 var saltRouds = 10
@@ -8,7 +8,7 @@ var saltRouds = 10
 router.post('/signup', async function( req, res, next){
   console.log('hello')
 
-  var newUser = new Users({
+  var newUser = new UserSchema({
    email : req.body.email,
    name : req.body.name,
    password : req.body.password,
@@ -57,7 +57,7 @@ router.post('/loginUser', async (req, res)=>{
           if(err) {
             console.log(err)
           }
-         else if(chk.password === newUser.password) {
+         else if(result === true) {    
             res.send("User authenticated")
           }
           else {
