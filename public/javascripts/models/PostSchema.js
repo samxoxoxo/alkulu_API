@@ -7,10 +7,6 @@ const PostSchema = new mongoose.Schema({
     content: String,
     likes: Array,
     comments: Array
-    // timestamps: {
-    //     createdDate: Date,
-    //     updatedDate: Date
-    // }
 })
 
 module.exports = mongoose.model('Post', PostSchema, 'Post');

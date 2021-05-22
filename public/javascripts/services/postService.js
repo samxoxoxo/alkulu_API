@@ -29,6 +29,8 @@ post : async function(postid, userid, title, content, likeCount, comment)  {
         }
     })
     return respons;
+},
+likeInc : async function() {
+    
 }
-
 }
