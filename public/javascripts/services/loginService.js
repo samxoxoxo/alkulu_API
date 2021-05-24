@@ -5,8 +5,7 @@ module.exports = {
     login: async function(email, password) {
 
         var resultStatus = {status: "Successfully Login"}
-        var resd 
-        
+
    await UserSchema.findOne({email: email})
   .then(async chk => {
     if(!chk) {

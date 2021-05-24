@@ -17,8 +17,11 @@ const BookSchema = new mongoose.Schema({
             default: "true"
         },
         imageData: {
-            type: String,
+            type: Array,
         }
+    },
+    qrCode: {
+        type: String
     }
 })
 

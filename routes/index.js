@@ -6,7 +6,7 @@ var commentSchema = require('../public/javascripts/models/commentSchema')
 /* GET home page. */
 
 router.get('/', async function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.send('API running');
 });
 
 
