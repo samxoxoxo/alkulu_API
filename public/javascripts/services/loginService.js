@@ -1,5 +1,5 @@
 var UserSchema = require('../models/UserSchema')
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcryptjs');
 var saltRouds = 10
 module.exports = {
     login: async function(email, password) {
