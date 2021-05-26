@@ -34,8 +34,8 @@ const fileFilter = (req, file, cb) =>{
   });
 
   router.route("/uploadmulter")
-  .post(upload.single('imageData'),cors(), async (req, res, next) =>{
- 
+  .post(upload.array('imageData', 6),cors(), async (req, res, next) =>{
+    console.log(req.body)
   const newBook = new booksSchema({
     bookid: req.body.bookid,
     title: req.body.title,
@@ -49,7 +49,7 @@ const fileFilter = (req, file, cb) =>{
     Volume: req.body.volume,
     image : {
     imageName: req.body.imageName,  
-    imageData: req.file.path
+    imageData: req.files
     },
     qrCode: "generated"
   });

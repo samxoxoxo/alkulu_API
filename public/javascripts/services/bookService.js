@@ -1,10 +1,7 @@
 var booksSchema = require('../models/booksSchema')
 const QRcodes = require('qrcode')
 
-var base64QR = (code) => {
-    var x =  code
-    return x
-}
+
 module.exports = {
     
     newBooks: async function(book) {
@@ -14,14 +11,19 @@ module.exports = {
 //* generating QR code in base64 and storing it in var base64QR
          let stringdata = JSON.stringify(data)
          var base64QR ;
-       QRcodes.toDataURL(stringdata, async function (err, code) {
-            if(err) return console.log("error occurred")
+     
+          QRcodes.toDataURL(stringdata, async function (err, code) {
+ 
+        if(err){ 
+                return base64QR = err
+            }
             else
             {
-            return x = code 
+                base64QR = code
+            return base64QR
         }
         })
- //*     
+     
         var send = {
             bookid: null,
             status: ""
@@ -29,9 +31,8 @@ module.exports = {
       
         await booksSchema.findOne({bookid: book.bookid})
         .then(async (chk) => {
-            if(!chk) {
-                       
-                
+            if(!chk) {        
+                console.log(base64QR)
   const newBook = new booksSchema({
     bookid: book.bookid,
     title: book.title,
