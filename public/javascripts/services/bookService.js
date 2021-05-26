@@ -32,7 +32,7 @@ module.exports = {
         await booksSchema.findOne({bookid: book.bookid})
         .then(async (chk) => {
             if(!chk) {        
-                console.log(base64QR)
+               
   const newBook = new booksSchema({
     bookid: book.bookid,
     title: book.title,
@@ -69,5 +69,51 @@ module.exports = {
         })    
         console.log(send)
         return send;    
-}
+},
+    getBook: async function() {
+        var data = []
+        await booksSchema.find( {} )
+        .then(async (result)=>{
+            for(let i=0;i<result.length;i++) {
+                data.push(result[i])
+              }
+        })
+        return data
+    },
+
+    bookAction: async function(bookid, type) {
+        var obj = {
+            res: [],
+            action: ""
+        }
+        if(type === "delete") {
+            await booksSchema.findOneAndDelete({bookid: bookid})
+            .then(async (result) => {
+                if(!result) {
+                    obj.action = "Book already deleted or not found"
+                    return obj
+                } else {
+                    obj.res = result
+                    obj.action = "Deleted successfully"
+                    return obj
+                }
+            })
+        } else if(type === "update") {
+            const obj = {
+                title: "updateMe"
+            }
+            
+            await booksSchema.findOneAndUpdate({bookid: bookid}, obj, (err, result)=>{
+                if(err) {
+                    console.log(err)
+                } else {
+                    return result
+                }
+            })
+            .then((result)=>{
+                console.log(result)
+            })
+                
+        }
+    }
 }

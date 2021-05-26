@@ -57,7 +57,23 @@ const fileFilter = (req, file, cb) =>{
   var ress = await bookService.newBooks(newBook)
  
   res.status(200).send(ress)
-  });
+  })
+
+  router.post('/getBookdata', async (req,res,next) => {
+ 
+    var bookData = await bookService.getBook()
+    res.send(bookData)   
+  })
+
+  router.post('/action', async (req, res, next) =>{
+
+    var book = req.body.bookid
+    var type = req.body.type
+    var book = await bookService.bookAction(book, type)
+
+    res.send(book)
+
+  })
 
 
 
