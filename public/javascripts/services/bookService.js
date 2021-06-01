@@ -43,7 +43,7 @@ module.exports = {
     publisher: book.publisher,
     keywords: book.keywords,
     language: book.language,
-    Volume: book.volume,
+    volume: book.volume,
     image : {
     imageName: book.image.imageName,  
     imageData: book.image.imageData

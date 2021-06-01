@@ -27,9 +27,6 @@ const fileFilter = (req, file, cb) =>{
 
   const upload = multer({
   storage: storage,
-  limits: {
-  fileSize: 1024*1024*5
-  },
   fileFileter: fileFilter
   });
 
@@ -46,7 +43,7 @@ const fileFilter = (req, file, cb) =>{
     publisher: req.body.publisher,
     keywords: req.body.keywords,
     language: req.body.language,
-    Volume: req.body.volume,
+    volume: req.body.volume,
     image : {
     imageName: req.body.imageName,  
     imageData: req.files
