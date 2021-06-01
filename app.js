@@ -14,7 +14,7 @@ require('./public/javascripts/services/connection')
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-
+app.use(cors())
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -27,7 +27,7 @@ app.use('/blog', postRouter);
 app.use('/book', bookRouter)
 app.use('/uploads', express.static('uploads'))
 // catch 404 and forward to error handler
-app.use(cors())
+
 app.use(function(req, res, next) {
   next(createError(404));
 });
