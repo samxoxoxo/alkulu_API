@@ -11,6 +11,7 @@ router.post('/signup', async function( req, res, next){
    email : req.body.email,
    name : req.body.name,
    password : req.body.password,
+   admin: false
   })
   var ress = await loginService.signup(newUser.email, newUser.password, newUser.name)
   res.send(ress)
@@ -19,10 +20,18 @@ router.post('/signup', async function( req, res, next){
 router.post('/loginUser', async (req, res)=>{
   var newUser = new UserSchema({
     email: req.body.email,
-    password: req.body.password
+    password: req.body.password,
+
   })
     var ress  =  await loginService.login(newUser.email, newUser.password) 
     res.send(ress)
+})
+
+router.post('/checkUser', async (req, res)=>{
+    var id = req.body.id
+
+  await loginService.getPersonalDetail(id, res) 
+    
 })
 
 module.exports = router;

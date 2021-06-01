@@ -5,20 +5,20 @@ const QRcodes = require('qrcode')
 module.exports = {
     
     newBooks: async function(book) {
-        let data = {
-            id: book.bookid
-        }
+        let data = `https://alkulu.netlify.app/partBook/bookid=${book.bookid}`
+        
 //* generating QR code in base64 and storing it in var base64QR
-         let stringdata = JSON.stringify(data)
+        //  let stringdata = JSON.stringify(data)
          var base64QR ;
      
-          QRcodes.toDataURL(stringdata, async function (err, code) {
+          QRcodes.toDataURL(data, async function (err, code) {
  
         if(err){ 
                 return base64QR = err
             }
             else
             {
+                console.log(code)
                 base64QR = code
             return base64QR
         }
@@ -78,10 +78,11 @@ module.exports = {
                 data.push(result[i])
               }
         })
+        console.log(data)
         return data
     },
 
-    bookAction: async function(bookid, type) {
+    bookAction: async function(bookid, type, newBook) {
         var obj = {
             res: [],
             action: ""
@@ -99,21 +100,26 @@ module.exports = {
                 }
             })
         } else if(type === "update") {
-            const obj = {
-                title: "updateMe"
-            }
-            
-            await booksSchema.findOneAndUpdate({bookid: bookid}, obj, (err, result)=>{
+                  
+            await booksSchema.findOneAndUpdate({bookid: bookid}, newBook, (err, result)=>{
                 if(err) {
                     console.log(err)
                 } else {
-                    return result
+                    obj.action = "Updated"
+                    obj.res = result
+                    return obj
                 }
-            })
-            .then((result)=>{
-                console.log(result)
-            })
-                
+            })        
         }
-    }
+        return obj
+    },
+    getQR: async (id, res) => {
+        await booksSchema.findOne({bookid: id})
+        .then(async(chk) => {
+            if(!chk) return res.send("Book not available with given id")
+            else {
+                res.send({qr: chk.qrCode, name: chk.title})
+            }
+        })
+    },
 }

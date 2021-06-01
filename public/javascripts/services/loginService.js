@@ -1,10 +1,15 @@
+require('dotenv').config()
 var UserSchema = require('../models/UserSchema')
 var bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken')
 var saltRouds = 10
 module.exports = {
     login: async function(email, password) {
 
-        var resultStatus = {status: "Successfully Login"}
+        var resultStatus = {
+          res: {},
+          status: "Successfully Login"
+        }
 
    await UserSchema.findOne({email: email})
   .then(async chk => {
@@ -15,6 +20,16 @@ module.exports = {
     else {
       const match = await bcrypt.compare(password, chk.password)
         if(match) {
+          const obj = {
+            name: chk.name,
+            email: chk.email,
+            admin: chk.admin
+              }
+          jwt.sign({ obj }, "X", { algorithm: 'HS256' }, function(err, token) {
+            console.log(token);
+          });
+             
+          resultStatus.res = obj
           return resultStatus
         }else {
           resultStatus.status = "Unauthorized Access"
@@ -62,5 +77,20 @@ module.exports = {
           }
         }) 
         return resultStatus
+    },
+    getPersonalDetail: async (id, res) => {
+      var query = {
+        _id : id
+      }
+
+      UserSchema.findOne(query)
+      .then(async (chk) => {
+        const obj = {
+          name: chk.name,
+          email: chk.email 
+        }
+
+        res.send(obj)
+      })
     }
 }

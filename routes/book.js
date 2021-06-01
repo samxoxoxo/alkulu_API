@@ -60,7 +60,7 @@ const fileFilter = (req, file, cb) =>{
   })
 
   router.post('/getBookdata', async (req,res,next) => {
- 
+
     var bookData = await bookService.getBook()
     res.send(bookData)   
   })
@@ -69,10 +69,32 @@ const fileFilter = (req, file, cb) =>{
 
     var book = req.body.bookid
     var type = req.body.type
-    var book = await bookService.bookAction(book, type)
+    const newBook  = {
+      bookid: req.body.bookid,
+      title: req.body.title,
+      author: req.body.author,
+      coAuthor: req.body.coAuthor,
+      categories: req.body.categories,
+      pages: req.body.pages,
+      publisher: req.body.publisher,
+      keywords: req.body.keywords,
+      language: req.body.language,
+      Volume: req.body.volume,
+      // image : {
+      // imageName: req.body.imageName,  
+      // imageData: req.files
+      // },
+      // qrCode: "generated"
+    };
+    var book = await bookService.bookAction(book, type, newBook)
 
     res.send(book)
 
+  })
+
+  router.post('/getQR', async (req, res, next) => {
+    var bookid = req.body.bookid;
+    await bookService.getQR(bookid, res) 
   })
 
 

@@ -12,9 +12,9 @@ const UserSchema = new mongoose.Schema({
         type: String,
         require: true
     },
-    id : {
-        type: Number,
-        require: true
+    admin: {
+        type: Boolean,
+        default: false
     }
 })
 

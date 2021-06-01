@@ -5,7 +5,7 @@ const BookSchema = new mongoose.Schema({
     title: String,
     author: String,
     coAuthor: String,
-    categories: Array,
+    categories: String,
     pages: Number,
     publisher: String,
     keywords: Array,
@@ -22,6 +22,9 @@ const BookSchema = new mongoose.Schema({
     },
     qrCode: {
         type: String
+    },
+    issued: {
+        type: Boolean
     }
 })
 
