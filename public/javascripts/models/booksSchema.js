@@ -10,7 +10,7 @@ const BookSchema = new mongoose.Schema({
     publisher: String,
     keywords: Array,
     language: String,
-    Volume: Number,
+    volume: Number,
     image: {
         imageName: {
             type: String,
@@ -24,7 +24,8 @@ const BookSchema = new mongoose.Schema({
         type: String
     },
     issued: {
-        type: Boolean
+        type: Boolean,
+        default: false
     }
 })
 
