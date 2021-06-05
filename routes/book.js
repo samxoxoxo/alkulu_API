@@ -92,7 +92,7 @@ const fileFilter = (req, file, cb) =>{
   })
 
   router.post('/getQR', cors(), async (req, res, next) => {
-    var bookid = req.body.bookid;
+    var bookid = req.body.qrbookid;
     await bookService.getQR(bookid, res) 
   })
  

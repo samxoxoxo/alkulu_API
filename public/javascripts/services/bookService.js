@@ -119,6 +119,7 @@ module.exports = {
         return obj
     },
     getQR: async (id, res) => {
+        console.log(id)
         await booksSchema.findOne({bookid: id})
         .then(async(chk) => {
             if(!chk) return res.send("Book not available with given id")
