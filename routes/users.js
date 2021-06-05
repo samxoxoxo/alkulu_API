@@ -18,13 +18,12 @@ router.post('/signup', async function( req, res, next){
 })
 
 router.post('/loginUser', async (req, res)=>{
-  var newUser = new UserSchema({
-    email: req.body.email,
-    password: req.body.password,
-
-  })
-    var ress  =  await loginService.login(newUser.email, newUser.password) 
-    res.send(ress)
+  
+  var email = req.body.email
+  var password = req.body.password
+  
+    await loginService.login(email, password, res) 
+    
 })
 
 router.post('/checkUser', async (req, res)=>{
@@ -32,6 +31,18 @@ router.post('/checkUser', async (req, res)=>{
 
   await loginService.getPersonalDetail(id, res) 
     
+})
+router.post('/checkAdmin', loginService.auth,  async (req, res, next) => {
+  if(req.user.admin === true) {
+    res.send({status: "isAdmin"})
+  }
+  else {
+    res.send({status: "notAdmin"})
+  }
+})
+router.post("/refresh", async (req,res,next)=>{
+  var refreshToken = req.body.token;
+   await loginService.refresh(refreshToken, res)
 })
 
 module.exports = router;

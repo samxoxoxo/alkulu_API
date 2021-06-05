@@ -5,6 +5,7 @@ require('../public/javascripts/services/connection')
 var cors = require('cors')
 const multer = require('multer');
 const bookService = require('../public/javascripts/services/bookService');
+const loginService = require('../public/javascripts/services/loginService');
 
 // storage of image on server with name as Date of upload
 
@@ -30,8 +31,9 @@ const fileFilter = (req, file, cb) =>{
   fileFileter: fileFilter
   });
 
+
   router.route("/uploadmulter")
-  .post(upload.array('imageData', 6),cors(), async (req, res, next) =>{
+  .post(upload.array('imageData', 6), cors(), async (req, res, next) =>{
     console.log(req.body)
   const newBook = new booksSchema({
     bookid: req.body.bookid,
@@ -62,12 +64,12 @@ const fileFilter = (req, file, cb) =>{
     res.send(bookData)   
   })
 
-  router.post('/action', async (req, res, next) =>{
+  router.post('/action',async (req, res, next) =>{
 
-    var book = req.body.bookid
+    var book = req.body.deleteid
     var type = req.body.type
     const newBook  = {
-      bookid: req.body.bookid,
+      bookid: req.body.deleteid,
       title: req.body.title,
       author: req.body.author,
       coAuthor: req.body.coAuthor,
@@ -83,16 +85,17 @@ const fileFilter = (req, file, cb) =>{
       // },
       // qrCode: "generated"
     };
-    var book = await bookService.bookAction(book, type, newBook)
+    var book = await bookService.bookAction(book, type, newBook, res)
 
     res.send(book)
 
   })
 
-  router.post('/getQR', async (req, res, next) => {
+  router.post('/getQR', cors(), async (req, res, next) => {
     var bookid = req.body.bookid;
     await bookService.getQR(bookid, res) 
   })
+ 
 
 
 

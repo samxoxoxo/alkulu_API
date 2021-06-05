@@ -18,7 +18,7 @@ module.exports = {
             }
             else
             {
-                console.log(code)
+              
                 base64QR = code
             return base64QR
         }
@@ -53,7 +53,7 @@ module.exports = {
   var id;
                 await newBook.save()
                 .then((result)=>{
-                   console.log(result.bookid)
+                
                     id = result.bookid
                    
                 }).catch((err)=>next(err));
@@ -67,7 +67,7 @@ module.exports = {
                 return send
             }
         })    
-        console.log(send)
+    
         return send;    
 },
     getBook: async function() {
@@ -78,28 +78,33 @@ module.exports = {
                 data.push(result[i])
               }
         })
-        console.log(data)
+      
         return data
     },
 
-    bookAction: async function(bookid, type, newBook) {
+    bookAction: async function(deleteid, types, newBook) {
         var obj = {
             res: [],
             action: ""
-        }
-        if(type === "delete") {
-            await booksSchema.findOneAndDelete({bookid: bookid})
-            .then(async (result) => {
-                if(!result) {
-                    obj.action = "Book already deleted or not found"
+        }   
+      
+        
+        var deleteIDS = JSON.parse("[" + deleteid + "]");
+        if(types === "delete") {
+            await booksSchema.deleteMany({bookid: {
+                $in: deleteIDS
+            }}, function(err, result) {
+                if (err) {
+                    obj.action("Book not found or already Deleted")
                     return obj
                 } else {
-                    obj.res = result
-                    obj.action = "Deleted successfully"
-                    return obj
+                  obj.res = result;
+                  obj.action = "Deleted Successfully"
+                  return obj
                 }
-            })
-        } else if(type === "update") {
+              })
+          
+        } else if(types === "update") {
                   
             await booksSchema.findOneAndUpdate({bookid: bookid}, newBook, (err, result)=>{
                 if(err) {
