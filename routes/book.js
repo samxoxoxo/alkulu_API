@@ -34,7 +34,7 @@ const fileFilter = (req, file, cb) =>{
 
   router.route("/uploadmulter")
   .post(upload.array('imageData', 6), cors(), async (req, res, next) =>{
-    console.log(req.body)
+    // console.log(req.body)
   const newBook = new booksSchema({
     bookid: req.body.bookid,
     title: req.body.title,
