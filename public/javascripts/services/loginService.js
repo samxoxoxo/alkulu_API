@@ -18,6 +18,7 @@ module.exports = {
         await UserSchema
             .findOne({email: email})
             .then(async chk => {
+                
                if (!chk) {
                     resultStatus.status = "User not exist"
                     res.send(resultStatus)
@@ -126,9 +127,6 @@ module.exports = {
     },
     refresh: async (token, res) => {
       var tokens = crypto.decrypt(token)
-      
-      
-      
         if (!tokens || !refreshTokensArr.includes(tokens)) {
           
             // obj.status = "Login again"

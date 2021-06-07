@@ -26,6 +26,10 @@ const BookSchema = new mongoose.Schema({
     issued: {
         type: Boolean,
         default: false
+    },
+    issueCount: {
+        type: Number,
+        default: 0 
     }
 })
 

@@ -11,6 +11,8 @@ var postRouter = require('./routes/post');
 var bookRouter = require('./routes/book')
 var app = express();
 require('./public/javascripts/services/connection')
+var dotenv = require('dotenv')
+dotenv.config()
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');

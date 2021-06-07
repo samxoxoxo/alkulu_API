@@ -5,98 +5,104 @@ require('../public/javascripts/services/connection')
 var cors = require('cors')
 const multer = require('multer');
 const bookService = require('../public/javascripts/services/bookService');
-const loginService = require('../public/javascripts/services/loginService');
 
 // storage of image on server with name as Date of upload
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './uploads')
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + file.originalname)
-  }
+    destination: function (req, file, cb) {
+        cb(null, './uploads')
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + file.originalname)
+    }
 })
 
-const fileFilter = (req, file, cb) =>{
-  if(file.mimetype==="image/jpeg"||file.mimetype==="image/png"){
-  cb(null,true);
-  }else{
-  cb(null, false);
-  }
-  }
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+        cb(null, true);
+    } else {
+        cb(null, false);
+    }
+}
 
-  const upload = multer({
-  storage: storage,
-  fileFileter: fileFilter
-  });
+const upload = multer({storage: storage, fileFileter: fileFilter});
 
+router
+    .route("/uploadmulter")
+    .post(upload.array('imageData', 6), cors(), async(req, res, next) => {
+        // console.log(req.body)
+        const newBook = new booksSchema({
+            bookid: req.body.bookid,
+            title: req.body.title,
+            author: req.body.author,
+            coAuthor: req.body.coAuthor,
+            categories: req.body.categories,
+            pages: req.body.pages,
+            publisher: req.body.publisher,
+            keywords: req.body.keywords,
+            language: req.body.language,
+            volume: req.body.volume,
+            image: {
+                imageName: req.body.imageName,
+                imageData: req.files
+            },
+            qrCode: "generated"
+        });
 
-  router.route("/uploadmulter")
-  .post(upload.array('imageData', 6), cors(), async (req, res, next) =>{
-    // console.log(req.body)
-  const newBook = new booksSchema({
-    bookid: req.body.bookid,
-    title: req.body.title,
-    author: req.body.author,
-    coAuthor: req.body.coAuthor,
-    categories: req.body.categories,
-    pages: req.body.pages,
-    publisher: req.body.publisher,
-    keywords: req.body.keywords,
-    language: req.body.language,
-    volume: req.body.volume,
-    image : {
-    imageName: req.body.imageName,  
-    imageData: req.files
-    },
-    qrCode: "generated"
-  });
+        var ress = await bookService.newBooks(newBook)
 
-  var ress = await bookService.newBooks(newBook)
- 
-  res.status(200).send(ress)
-  })
+        res
+            .status(200)
+            .send(ress)
+    })
 
-  router.post('/getBookdata', async (req,res,next) => {
+router.post('/getBookdata', async(req, res, next) => {
 
     var bookData = await bookService.getBook()
-    res.send(bookData)   
-  })
+    res.send(bookData)
+})
+router.post('/getRegistration', async(req, res, next) => {
+    var managerData = await bookService.getManger()
+    res.send(managerData)
+})
 
-  router.post('/action',async (req, res, next) =>{
+router.post('/action', async(req, res, next) => {
 
     var book = req.body.deleteid
     var type = req.body.type
-    const newBook  = {
-      bookid: req.body.deleteid,
-      title: req.body.title,
-      author: req.body.author,
-      coAuthor: req.body.coAuthor,
-      categories: req.body.categories,
-      pages: req.body.pages,
-      publisher: req.body.publisher,
-      keywords: req.body.keywords,
-      language: req.body.language,
-      Volume: req.body.volume,
-      // image : {
-      // imageName: req.body.imageName,  
-      // imageData: req.files
-      // },
-      // qrCode: "generated"
+    const newBook = {
+        bookid: req.body.deleteid,
+        title: req.body.title,
+        author: req.body.author,
+        coAuthor: req.body.coAuthor,
+        categories: req.body.categories,
+        pages: req.body.pages,
+        publisher: req.body.publisher,
+        keywords: req.body.keywords,
+        language: req.body.language,
+        Volume: req.body.volume,
+        // image : { imageName: req.body.imageName, imageData: req.files }, qrCode:
+        // "generated"
     };
     var book = await bookService.bookAction(book, type, newBook, res)
 
     res.send(book)
 
-  })
+})
 
-  router.post('/getQR', cors(), async (req, res, next) => {
+router.post('/getQR', cors(), async(req, res, next) => {
     var bookid = req.body.qrbookid;
-    await bookService.getQR(bookid, res) 
-  })
- 
+    await bookService.getQR(bookid, res)
+})                 
 
-
+router.post('/issueBook', async(req, res, next) => {
+    var bookid = req.body.issueid;
+    var isadmin = req.body.isadmin;
+    await bookService.issueBook(bookid, isadmin, res, req)
+})
+router.post("/chkIssue", async(req, res, next) => {
+    var bookid = req.body.issueid;
+    await bookService.chkIssue(bookid, res)
+})
 
 module.exports = router;
