@@ -2,12 +2,12 @@ var booksSchema = require('../models/booksSchema')
 const QRcodes = require('qrcode');
 const ManagerSchema = require('../models/managerSchema');
 const fun = require('../normalFunction');
-
+var _ = require('lodash');
 
 module.exports = {
     //add new book with generated qr code converted into base 64
     newBooks: async function (book) {
-        let data = `https://alkulu.netlify.app/partBook/bookid=${book.bookid}`
+        let data = `https://alkulu.netlify.app/partBook/?bookid=${book.bookid}`
 
         // * generating QR code in base64 and storing it in var base64QR  let stringdata
         // = JSON.stringify(data)
@@ -119,10 +119,15 @@ module.exports = {
                 })
 
         } else if (types === "update") {
+            //filter the coming object and ommit undefined string value and empty string value
+            var filter = _.pickBy(newBook, function(value, key) {
+                  
+                return !(value === 'undefined' || value === '')
+              });
 
             await booksSchema.findOneAndUpdate({
-                bookid: bookid
-            }, newBook, (err, result) => {
+                bookid: deleteid
+            }, {$set: filter},{new: true}, (err, result) => {
                 if (err) {
                     console.log(err)
                 } else {
@@ -226,5 +231,11 @@ module.exports = {
                     res.send({status: "not issued"})
                 }
             })
+    },
+    getSpecBook: async (id, res) => {
+        await booksSchema.findOne({bookid: id})
+        .then((result) => {
+            res.send(result)
+        })
     }
 }

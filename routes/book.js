@@ -66,8 +66,8 @@ router.post('/getRegistration', async(req, res, next) => {
     res.send(managerData)
 })
 
-router.post('/action', async(req, res, next) => {
-
+router.route('/action').post(upload.array('imageData', 6), async(req, res, next) => {
+    
     var book = req.body.deleteid
     var type = req.body.type
     const newBook = {
@@ -80,10 +80,14 @@ router.post('/action', async(req, res, next) => {
         publisher: req.body.publisher,
         keywords: req.body.keywords,
         language: req.body.language,
-        Volume: req.body.volume,
-        // image : { imageName: req.body.imageName, imageData: req.files }, qrCode:
-        // "generated"
+        volume: req.body.volume,
+        image : { imageName: req.body.imageName, imageData: req.files }
     };
+    
+    if(req.body.type === "update" && req.files.length === 0) {
+     newBook.image = "undefined"   
+    }
+    
     var book = await bookService.bookAction(book, type, newBook, res)
 
     res.send(book)
@@ -104,5 +108,8 @@ router.post("/chkIssue", async(req, res, next) => {
     var bookid = req.body.issueid;
     await bookService.chkIssue(bookid, res)
 })
-
+router.post("/getSpecBook", async (req, res,next) => {
+    var id = req.body.specbookid
+    await bookService.getSpecBook(id, res)
+})
 module.exports = router;

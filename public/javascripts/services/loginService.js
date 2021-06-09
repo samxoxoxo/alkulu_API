@@ -110,7 +110,7 @@ module.exports = {
     },
     auth: async(req, res, next) => {
         let token = req.headers['authorization']
-      
+        
         token = token.split(' ')[1]
 
         var tokens = crypto.decrypt(token)
